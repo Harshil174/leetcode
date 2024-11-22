@@ -12,6 +12,13 @@ export interface IUser extends mongoose.Document {
   problems: mongoose.Types.ObjectId[];
 }
 
+export interface IContest extends mongoose.Document {
+  startTime: string;
+  endTime: string;
+  startDate: Date;
+  problems: mongoose.Types.ObjectId[];
+}
+
 export interface IProblem extends mongoose.Document {
   title: string;
   description: string;

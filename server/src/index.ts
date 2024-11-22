@@ -9,7 +9,8 @@ import { connectDB } from "./db/connectDB";
 
 import authRouter from "./routes/auth.route";
 import problemsRouter from "./routes/problems.route";
-import problemTestCasesRouter from "./routes/problem-test.route";
+import testCasesRouter from "./routes/problem-test.route";
+import boilerPlateCodeRouter from "./routes/problem-boiler-plate.route";
 
 const app = express();
 const MONGODB_URI = process.env.MONGODB_URI || "";
@@ -21,7 +22,8 @@ app.use(helmet());
 
 app.use("/api/auth", authRouter);
 app.use("/api/problems", problemsRouter);
-app.use("/api/problems-test-cases", problemTestCasesRouter);
+app.use("/api/test-cases", testCasesRouter);
+app.use("/api/boiler-plate-code", boilerPlateCodeRouter);
 
 app.listen(PORT, async () => {
   await connectDB(MONGODB_URI);
