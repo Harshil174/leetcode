@@ -95,13 +95,12 @@ export const getBoilerPlateById = async (req: AuthRequest, res: Response) => {
 export const updateBoilerPlate = async (req: AuthRequest, res: Response) => {
   try {
     const { boilerPlateId } = req.params;
-    const { language, code, problemId } = req.body;
+    const { language, code } = req.body;
 
     const updateData: Partial<IProblemBoilerPlate> = {};
 
     if (language) updateData.language = language;
     if (code) updateData.code = code;
-    if (problemId) updateData.problemId = problemId;
 
     const problemBoilerPlate = await ProblemBoilerPlate.findByIdAndUpdate(
       { _id: boilerPlateId, userId: req.user._id },

@@ -9,6 +9,7 @@ import { connectDB } from "./db/connectDB";
 
 import authRouter from "./routes/auth.route";
 import problemsRouter from "./routes/problems.route";
+import contestsRouter from "./routes/contests.route";
 import testCasesRouter from "./routes/problem-test.route";
 import boilerPlateCodeRouter from "./routes/problem-boiler-plate.route";
 
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use("/api/auth", authRouter);
+app.use("/api/contests", contestsRouter);
 app.use("/api/problems", problemsRouter);
 app.use("/api/test-cases", testCasesRouter);
 app.use("/api/boiler-plate-code", boilerPlateCodeRouter);

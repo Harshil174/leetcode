@@ -13,6 +13,7 @@ export interface IUser extends mongoose.Document {
 }
 
 export interface IContest extends mongoose.Document {
+  name: string;
   startTime: string;
   endTime: string;
   startDate: Date;
@@ -27,6 +28,7 @@ export interface IProblem extends mongoose.Document {
   testCases: mongoose.Types.ObjectId[];
   boilerPlateCode: mongoose.Types.ObjectId;
   submissions: mongoose.Types.ObjectId[];
+  contest: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
 }
 

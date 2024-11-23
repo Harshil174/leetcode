@@ -24,6 +24,7 @@ const problemSchema = new mongoose.Schema(
     submissions: [
       { type: mongoose.Schema.Types.ObjectId, ref: "ProblemSubmission" },
     ],
+    contestId: { type: mongoose.Schema.Types.ObjectId, ref: "Contest" },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
