@@ -12,6 +12,7 @@ import problemsRouter from "./routes/problems.route";
 import contestsRouter from "./routes/contests.route";
 import testCasesRouter from "./routes/problem-test.route";
 import boilerPlateCodeRouter from "./routes/problem-boiler-plate.route";
+import submissionRouter from "./routes/problem-submission.route";
 
 const app = express();
 const MONGODB_URI = process.env.MONGODB_URI || "";
@@ -22,10 +23,11 @@ app.use(cors());
 app.use(helmet());
 
 app.use("/api/auth", authRouter);
-app.use("/api/contests", contestsRouter);
-app.use("/api/problems", problemsRouter);
-app.use("/api/test-cases", testCasesRouter);
+app.use("/api/contest", contestsRouter);
+app.use("/api/problem", problemsRouter);
+app.use("/api/test-case", testCasesRouter);
 app.use("/api/boiler-plate-code", boilerPlateCodeRouter);
+app.use("/api/submission", submissionRouter);
 
 app.listen(PORT, async () => {
   await connectDB(MONGODB_URI);

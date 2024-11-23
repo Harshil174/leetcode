@@ -14,9 +14,10 @@ const problemSubmissionSchema = new mongoose.Schema(
       required: true,
     },
     language: { type: String, required: true },
-    runTime: { type: Number, required: true, default: 0 },
+    runTime: { type: Number, required: true },
     memory: { type: mongoose.Schema.Types.Decimal128, required: true },
     problemId: { type: mongoose.Schema.Types.ObjectId, ref: "Problem" },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
