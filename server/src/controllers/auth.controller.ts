@@ -10,13 +10,17 @@ export const signup = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      res.status(400).json({ message: "Please fill all required fields." });
+      res
+        .status(400)
+        .json({ success: false, message: "Please fill all required fields." });
       return;
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).json({ message: "Email already exists." });
+      res
+        .status(400)
+        .json({ success: false, message: "Email already exists." });
       return;
     }
 
@@ -27,17 +31,20 @@ export const signup = async (req: Request, res: Response) => {
     });
     await user.save();
 
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "", {
+      expiresIn: "1d",
+    });
+
     res.status(201).json({
+      success: true,
       message: "Signed up successfully",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      token,
+      user,
     });
   } catch (err: any) {
     console.error("Error in sign-up", err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });
@@ -55,21 +62,22 @@ export const signin = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(404).json({ message: "User not found." });
+      res.status(404).json({ success: false, message: "User not found." });
       return;
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      res.status(400).json({ message: "Invalid Password." });
+      res.status(400).json({ success: false, message: "Invalid Password." });
       return;
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "", {
-      expiresIn: "7d",
+      expiresIn: "1d",
     });
 
     res.status(200).json({
+      success: true,
       message: "Successfully signed in",
       token,
       user,
@@ -77,6 +85,7 @@ export const signin = async (req: Request, res: Response) => {
   } catch (err: any) {
     console.error("Error in sign-in", err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });
