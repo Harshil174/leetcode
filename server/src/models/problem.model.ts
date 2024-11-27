@@ -4,7 +4,7 @@ import { IProblem } from "../types";
 const problemSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true },
+    description: [{ type: String, required: true, trim: true }],
     status: { type: String, enum: ["pending", "solved"], default: "pending" },
     difficulty: {
       type: String,

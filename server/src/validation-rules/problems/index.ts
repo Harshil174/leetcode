@@ -44,11 +44,9 @@ export const createProblemRules = [
 ];
 
 export const updateProblemRules = [
-  body("title").trim().notEmpty().withMessage("Title is Required."),
   body("description")
     .trim()
-    .notEmpty()
-    .withMessage("Description is Required.")
+    .optional()
     .isLength({ min: 10 })
     .withMessage("Description must be at least 10 characters long."),
   // .matches(/#{1,6} .+/)
@@ -77,8 +75,7 @@ export const updateProblemRules = [
     .withMessage("Invalid problem status"),
   body("difficulty")
     .trim()
-    .notEmpty()
-    .withMessage("Difficulty is Required.")
+    .optional()
     .isIn(["easy", "medium", "hard"])
     .withMessage("Invalid problem difficulty"),
 ];

@@ -6,22 +6,23 @@ const RootLayout = lazy(() => import("@/layouts/RootLayout"));
 const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
 
 const LandingPage = lazy(() => import("@/features/landing/LandingPage"));
-const SignUp = lazy(() => import("@/features/auth/SignUpForm"));
+const SignUpForm = lazy(() => import("@/features/auth/SignUpForm"));
 const SignInForm = lazy(() => import("@/features/auth/SignInForm"));
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage"));
 
 import LoadingSpinner from "@/components/LoadingSpinner";
+import ProblemPage from "@/features/problems/problem/ProblemPage";
 
 const App = () => {
   const router = createBrowserRouter([
+    { path: "/auth/sign-up", element: <SignUpForm /> },
+    { path: "/auth/sign-in", element: <SignInForm /> },
     {
       element: <RootLayout />,
       children: [
         // public routes
         { path: "/", element: <LandingPage /> },
-        { path: "/auth/sign-up", element: <SignUp /> },
-        { path: "/auth/sign-in", element: <SignInForm /> },
 
         // private routes
         {
@@ -32,12 +33,22 @@ const App = () => {
             </ProtectedRoute>
           ),
         },
+        {
+          path: "/problem/:problemId",
+          element: (
+            <ProtectedRoute>
+              <ProblemPage />
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
   ]);
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <RouterProvider router={router} />
+      <div className="w-full h-screen flex flex-col relative overflow-x-hidden">
+        <RouterProvider router={router} />
+      </div>
     </Suspense>
   );
 };

@@ -14,7 +14,9 @@ export const authMiddleware = async (
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      res.status(401).json({ message: "Authorization Required" });
+      res
+        .status(401)
+        .json({ success: false, message: "Authorization Required" });
       return;
     }
 
@@ -22,13 +24,13 @@ export const authMiddleware = async (
     const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
-      res.status(401).json({ message: "User not found" });
+      res.status(401).json({ success: false, message: "User not found" });
       return;
     }
 
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+    res.status(401).json({ success: false, message: "Invalid token" });
   }
 };

@@ -27,19 +27,17 @@ export const createSubmissionRules = [
 export const updateSubmissionRules = [
   body("status")
     .trim()
-    .notEmpty()
-    .withMessage("Submit status is Required.")
+    .optional()
     .isIn(["wrong-answer", "accepted", "time-limit-exceeded", "runtime-error"])
     .withMessage("Invalid submit status"),
-  body("language").trim().notEmpty().withMessage("Language is Required."),
   body("runTime")
-    .notEmpty()
-    .withMessage("runTime must not be empty")
+    .optional()
     .isNumeric()
     .withMessage("runTime must be a number")
     .custom((value) => value > 0)
     .withMessage("runTime must be greater than 0"),
   body("memory")
+    .optional()
     .isDecimal()
     .withMessage("Memory must be a valid decimal or float value")
     .isFloat()

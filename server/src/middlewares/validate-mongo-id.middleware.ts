@@ -14,7 +14,7 @@ export const validateMongoId = (
       req.params[param] &&
       !mongoose.Types.ObjectId.isValid(req.params[param])
     ) {
-      res.status(400).json({ message: `Invalid ${param}` });
+      res.status(400).json({success: false, message: `Invalid ${param}` });
       return;
     }
   }

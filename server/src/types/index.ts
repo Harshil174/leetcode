@@ -22,7 +22,7 @@ export interface IContest extends mongoose.Document {
 
 export interface IProblem extends mongoose.Document {
   title: string;
-  description: string;
+  description: string[];
   status: "pending" | "solved";
   difficulty: "easy" | "medium" | "hard";
   testCases: mongoose.Types.ObjectId[];

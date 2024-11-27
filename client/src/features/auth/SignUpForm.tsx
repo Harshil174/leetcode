@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useAuthStore } from "@/store/auth.store";
 
-import { signUp } from "@/services/auth.service";
+import { signUp } from "@/services/api/auth.service";
 
 import { Button } from "@/components/ui/button";
 import {

@@ -25,12 +25,14 @@ export const createProblem = async (req: AuthRequest, res: Response) => {
     );
 
     res.status(201).json({
+      success: true,
       message: "Problem created successfully",
       problem,
     });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });
@@ -44,16 +46,19 @@ export const getProblems = async (req: AuthRequest, res: Response) => {
     );
 
     if (!problems) {
-      res.status(404).json({ message: "Problems not found" });
+      res.status(404).json({ success: false, message: "Problems not found" });
       return;
     }
 
-    res
-      .status(200)
-      .json({ message: "Problems fetched successfully", problems });
+    res.status(200).json({
+      success: true,
+      message: "Problems fetched successfully",
+      problems,
+    });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });
@@ -67,17 +72,22 @@ export const getProblemById = async (req: AuthRequest, res: Response) => {
     const problem = await Problem.findById({
       _id: problemId,
       userId: req.user._id,
-    });
+    }).populate("testCases submissions boilerPlateCode");
 
     if (!problem) {
-      res.status(404).json({ message: "Problem not found" });
+      res.status(404).json({ success: false, message: "Problem not found" });
       return;
     }
 
-    res.status(200).json({ message: "Problem fetched successfully", problem });
+    res.status(200).json({
+      success: true,
+      message: "Problem fetched successfully",
+      problem,
+    });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });
@@ -103,14 +113,19 @@ export const updateProblem = async (req: AuthRequest, res: Response) => {
     );
 
     if (!problem) {
-      res.status(404).json({ message: "Problem not found" });
+      res.status(404).json({ success: false, message: "Problem not found" });
       return;
     }
 
-    res.status(200).json({ message: "Problem updated successfully", problem });
+    res.status(200).json({
+      success: true,
+      message: "Problem updated successfully",
+      problem,
+    });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });
@@ -133,14 +148,17 @@ export const deleteProblem = async (req: AuthRequest, res: Response) => {
     });
 
     if (!problem) {
-      res.status(404).json({ message: "Problem not found" });
+      res.status(404).json({ success: false, message: "Problem not found" });
       return;
     }
 
-    res.status(200).json({ message: "Problem deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Problem deleted successfully" });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({
+      success: false,
       message: "An unexpected error occurs, Please try again later.",
       error: err.message,
     });

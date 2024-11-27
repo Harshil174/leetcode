@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useAuthStore } from "@/store/auth.store";
 
-import { signIn } from "@/services/auth.service";
+import { signIn } from "@/services/api/auth.service";
 
 import {
   Card,

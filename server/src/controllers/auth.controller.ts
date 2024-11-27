@@ -56,7 +56,9 @@ export const signin = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ message: "Please fill all required fields." });
+      res
+        .status(400)
+        .json({ success: false, message: "Please fill all required fields." });
       return;
     }
 
