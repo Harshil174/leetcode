@@ -1,23 +1,36 @@
 import { useState, useRef } from "react";
+
 import { Editor } from "@monaco-editor/react";
-import parserBabel from "prettier/parser-babel";
+import prettier from "prettier/standalone";
+
+import { motion } from "framer-motion";
+
 import { ProblemBoilerPlate } from "@/types";
-import { Loader2 } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-interface LanguageConfig {
-  language: string;
-  parser: string;
-  parsers: any[];
-}
-
-const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
-  javascript: {
-    language: "javascript",
-    parser: "babel",
-    parsers: [parserBabel],
-  },
-};
+import {
+  AlignLeft,
+  Check,
+  CircleAlert,
+  Loader2,
+  RotateCcw,
+} from "lucide-react";
+import SelectLanguage, { LANGUAGE_CONFIGS } from "./SelectLanguage";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type CodeEditorProps = {
   boilerPlateCode: ProblemBoilerPlate;
@@ -28,75 +41,144 @@ const CodeEditor = ({ boilerPlateCode }: CodeEditorProps) => {
     boilerPlateCode.language || "javascript"
   );
   const [code, setCode] = useState<string>(boilerPlateCode.code || "");
+  const [isFormatting, setIsFormatting] = useState(false);
+  const [isFormatted, setIsFormatted] = useState(false);
   const editorRef = useRef<any>(null);
 
   const handleEditorMount = (editor: any) => {
+    editor.layout();
     editorRef.current = editor;
   };
 
-  const handleLanguageChange = (
-    selectedLanguage: keyof typeof LANGUAGE_CONFIGS
-  ) => {
-    setLanguage(selectedLanguage);
+  const handleResetDefaultCode = () => {
+    setCode(boilerPlateCode.code || "");
+  };
+
+  const formatCode = async () => {
+    try {
+      setIsFormatting(true);
+      const config = LANGUAGE_CONFIGS[language];
+      console.log(config);
+      const formattedCode = await prettier.format(code, {
+        parser: config.parser,
+        plugins: config.parsers.map((p) => p()),
+        semi: true,
+        singleQuote: true,
+        trailingComma: "es5",
+      });
+      console.log(formattedCode);
+
+      setCode(formattedCode);
+      setIsFormatted(true);
+      console.log("format complete");
+    } catch (err) {
+      console.error("Formatting error:", err);
+    } finally {
+      setIsFormatting(false);
+    }
   };
 
   return (
-    <ScrollArea className="w-full h-full p-2">
-      <div className="w-full min-h-[calc(100vh-16px)] border border-primary/40 rounded-lg bg-primary/10 relative">
-        <Editor
-          language={language}
-          value={code}
-          onChange={(value) => setCode(value || "")}
-          onMount={handleEditorMount}
-          loading={
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          }
-          className="w-full h-[98.1vh] rounded-lg overflow-hidden"
-          theme="vs-dark"
-          options={{
-            minimap: { enabled: false },
-            contextmenu: false,
-            formatOnType: true,
-            fontSize: 14,
-          }}
-        />
+    <div className="w-full h-full p-1 overflow-hidden">
+      <div className="w-full h-full border border-primary/40 rounded-lg bg-primary/10 flex flex-col gap-2 p-2 overflow-hidden relative">
+        <div className="px-3 py-2 flex items-center gap-5 justify-between bg-primary/5 border border-primary/40 rounded-lg overflow-x-scroll overflow-y-hidden">
+          <SelectLanguage language={language} setLanguage={setLanguage} />
+          <div
+            id="menu-bar"
+            className="flex items-center justify-between gap-2"
+          >
+            {/* format */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  {isFormatting ? (
+                    <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                  ) : isFormatted ? (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        duration: 0.5,
+                        type: "spring",
+                        stiffness: 200,
+                      }}
+                      className="text-green-600"
+                    >
+                      <Check />
+                    </motion.div>
+                  ) : (
+                    <AlignLeft
+                      onClick={formatCode}
+                      className="size-5 cursor-pointer text-primary/60 hover:text-primary"
+                    />
+                  )}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Format code</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            {/* reset */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <RotateCcw className="size-5 text-primary/60 hover:text-primary hover:-rotate-[360deg] transition duration-500 cursor-pointer" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Reset to default code</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="w-[450px]">
+                <div className="flex gap-5">
+                  <CircleAlert className="size-10 rotate-180" />
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Your current code will be discarded and reset to default
+                      code!
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleResetDefaultCode}>
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
+
+        <div className="rounded-lg flex-1 overflow-hidden">
+          <Editor
+            language={language}
+            value={code}
+            onChange={(value) => setCode(value || "")}
+            onMount={handleEditorMount}
+            loading={
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
+            }
+            className="w-full rounded-lg overflow-hidden"
+            theme="vs-dark"
+            options={{
+              minimap: { enabled: false },
+              contextmenu: false,
+              formatOnType: true,
+              fontSize: 14,
+            }}
+          />
+        </div>
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 
 export default CodeEditor;
-
-//  <div className="flex flex-col h-screen p-4 bg-gray-100">
-//        {/* <div className="flex space-x-4 mb-4">
-//          <Select value={language} onValueChange={handleLanguageChange}>
-//            <SelectTrigger className="w-48">
-//              <SelectValue placeholder="Select Language" />
-//            </SelectTrigger>
-//            <SelectContent>
-//              {Object.keys(LANGUAGE_CONFIGS).map((lang) => (
-//                <SelectItem key={lang} value={lang}>
-//                  {lang.charAt(0).toUpperCase() + lang.slice(1)}
-//                </SelectItem>
-//              ))}
-//            </SelectContent>
-//          </Select>
-//        </div> */}
-//        <div className="flex-grow">
-//          <Editor
-//             height="70vh"
-//            language={language}
-//            value={code}
-//            onChange={(value) => setCode(value || "")}
-//            onMount={handleEditorMount}
-//            loading={<Loader2 className="size-6 animate-spin text-muted-foreground" />}
-//            className="bg-red-500 rounded-lg"
-//            options={{
-//              minimap: { enabled: false },
-//              contextmenu: false,
-//              formatOnType: true,
-//              fontSize: 14,
-//            }}
-//          />
-//        </div>
-//      </div>

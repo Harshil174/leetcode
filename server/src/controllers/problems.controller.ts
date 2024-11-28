@@ -42,7 +42,7 @@ export const createProblem = async (req: AuthRequest, res: Response) => {
 export const getProblems = async (req: AuthRequest, res: Response) => {
   try {
     const problems = await Problem.find().select(
-      "-testCases -boilerPlateCode -submissions"
+      "-testCases -boilerPlateCode"
     );
 
     if (!problems) {
@@ -72,7 +72,7 @@ export const getProblemById = async (req: AuthRequest, res: Response) => {
     const problem = await Problem.findById({
       _id: problemId,
       userId: req.user._id,
-    }).populate("testCases submissions boilerPlateCode");
+    }).populate("testCases boilerPlateCode");
 
     if (!problem) {
       res.status(404).json({ success: false, message: "Problem not found" });

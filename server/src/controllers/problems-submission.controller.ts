@@ -31,7 +31,10 @@ export const createSubmission = async (req: AuthRequest, res: Response) => {
 
     await Problem.findByIdAndUpdate(
       { _id: problemId, userId: req.user._id },
-      { $push: { submissions: problemSubmission._id } },
+      {
+        $push: { submissions: problemSubmission._id },
+        $set: { status: "solved" },
+      },
       { new: true }
     );
 

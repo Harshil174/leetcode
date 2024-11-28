@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/resizable";
 
 import { Loader2 } from "lucide-react";
+import TestCases from "./components/TestCases";
 
 const ProblemPage = () => {
   const { problemId } = useParams();
@@ -43,9 +44,14 @@ const ProblemPage = () => {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-destructive bg-red-300">
+      <div className="flex flex-col items-center justify-center h-screen text-destructive">
         <p>{(error as Error).message || "Failed to fetch the problem"}</p>
-        <Button onClick={() => refetch()} size={"sm"} disabled={isRefetching}>
+        <Button
+          onClick={() => refetch()}
+          size={"sm"}
+          disabled={isRefetching}
+          className="mt-2"
+        >
           {isRefetching && <Loader2 className="size-4 animate-spin" />}
           Retry
         </Button>
@@ -60,7 +66,10 @@ const ProblemPage = () => {
       direction="horizontal"
       className="w-full h-full mx-auto overflow-hidden relative"
     >
-      <ResizablePanel defaultSize={50} className="w-full h-full">
+      <ResizablePanel
+        defaultSize={50}
+        className="w-full h-full overflow-hidden"
+      >
         <Question
           title={problem.title}
           status={problem.status}
@@ -72,8 +81,24 @@ const ProblemPage = () => {
 
       <ResizableHandle withHandle className="w-2 h-full" />
 
-      <ResizablePanel defaultSize={50} className=" w-full h-full">
-        <CodeEditor boilerPlateCode={problem.boilerPlateCode} />
+      <ResizablePanel
+        defaultSize={50}
+        className=" w-full h-full overflow-hidden"
+      >
+        <ResizablePanelGroup
+          direction="vertical"
+          className="w-full h-full m-auto overflow-hidden relative"
+        >
+          <ResizablePanel defaultSize={70} className="w-full h-full">
+            <CodeEditor boilerPlateCode={problem.boilerPlateCode} />
+          </ResizablePanel>
+
+          <ResizableHandle withHandle className="w-full h-2" />
+
+          <ResizablePanel defaultSize={30} className="w-full h-full">
+            <TestCases testCases={problem.testCases} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

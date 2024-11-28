@@ -1,69 +1,59 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { Problem } from "@/types";
+
+import { getAllProblems } from "@/services/api/problem.service";
+
+import LoadingSpinner from "@/components/LoadingSpinner";
+
+import { Button } from "@/components/ui/button";
 
 import DataTable from "./components/DataTable";
 import { columns } from "./components/Columns";
-import { useEffect, useState } from "react";
 
-function getData(): Problem[] {
-  return [
-    {
-      _id: "6741019a22060b4338a89795",
-      title: "Two Sum",
-      description: "",
-      status: "pending",
-      difficulty: "easy",
-      testCases: [],
-      boilerPlateCode: "j0ofj20934ikl",
-      submissions: [],
-      contestId: "hwoieuj9823",
-      userId: "uoijewf2093f",
-      createdAt: "2024-11-26T22:11:38.415+00:00",
-      updatedAt: "2024-11-243T02:04:12.230+23:12",
-    },
-    {
-      _id: "82uiojfwddfwse",
-      title: "Palindrome Number",
-      description: "",
-      status: "solved",
-      difficulty: "medium",
-      testCases: [],
-      boilerPlateCode: "0982oj3wf",
-      submissions: [],
-      contestId: "0uj2ipkwcu98",
-      userId: "q032ujivpfds",
-      createdAt: "2024-11-20T02:04:38.415+00:00",
-      updatedAt: "2024-11-21T02:04:38.415+00:00",
-    },
-    {
-      _id: "208pds32rwfwesd",
-      title: "Roman to Integer",
-      description: "",
-      status: "pending",
-      difficulty: "hard",
-      testCases: [],
-      boilerPlateCode: "9fuqa083jiepf",
-      submissions: [],
-      contestId: "fwoijqwefv",
-      userId: "jfu98i2ewjiv",
-      createdAt: "2024-11-18T02:04:38.415+00:00",
-      updatedAt: "2024-11-19T02:04:38.415+00:00",
-    },
-  ];
-}
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const DashboardPage = () => {
-  const [data, setdata] = useState<Problem[]>([]);
+  const { data, isLoading, isFetching, isRefetching, isError, error, refetch } =
+    useQuery<Problem[]>({
+      queryKey: ["problems"],
+      queryFn: async () => {
+        try {
+          const { problems } = await getAllProblems();
+          return problems;
+        } catch (err: any) {
+          toast.error(err.message || "Failed to fetch problems");
+          throw err;
+        }
+      },
+    });
 
-  useEffect(() => {
-    (async () => {
-      setdata(getData());
-    })();
-  }, []);
+  if (isLoading || isFetching) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-destructive">
+        <p>{(error as Error).message || "Failed to fetch problems"}</p>
+        <Button
+          onClick={() => refetch()}
+          size={"sm"}
+          disabled={isRefetching}
+          className="mt-2"
+        >
+          {isRefetching && <Loader2 className="size-4 animate-spin" />}
+          Retry
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white">
       <div className="container">
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={columns} data={data || []} />
       </div>
     </div>
   );

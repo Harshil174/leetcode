@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 import { ProblemTest } from "@/types";
@@ -19,10 +18,14 @@ const Question = ({
   description,
   testCases,
 }: QuestionProps) => {
+  const filteredTestCases = testCases.filter((testCase) => {
+    return testCase.visible;
+  });
+
   return (
-    <ScrollArea className="w-full h-full p-2">
-      <div className="w-full min-h-[calc(100vh-16px)] border border-primary/40 rounded-lg bg-primary/10 relative">
-        <div className="p-5">
+    <div className="w-full h-full p-1 overflow-hidden">
+      <div className="w-full h-full border border-primary/40 rounded-lg bg-primary/10 flex flex-col gap-2 p-2 overflow-hidden relative">
+        <div className="p-5 rounded-lg w-full h-full overflow-y-scroll">
           <div className="flex items-center gap-3 justify-between">
             <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
               {title}
@@ -40,13 +43,13 @@ const Question = ({
           ))}
 
           <div className="py-8">
-            {testCases.map((testCase, idx) => (
+            {filteredTestCases.map((testCase, idx) => (
               <TestCase key={idx} testCase={testCase} idx={idx} />
             ))}
           </div>
         </div>
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 
@@ -77,18 +80,14 @@ type TestCaseProps = {
 };
 
 const TestCase = ({ testCase, idx }: TestCaseProps) => {
-  if (!testCase.visible) {
-    return;
-  }
-
   return (
     <div className="py-5">
       <h4 className="font-semibold">Example {idx + 1}:</h4>
       {/* input */}
       <div className="mt-3 px-5 py-2 border-l-2 border-primary/50 bg-primary/5 w-fit">
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <h4 className="font-semibold">Input:</h4>
-          <h4 className="text-primary/60 font-semibold text-sm">
+          <h4 className="text-primary/60 font-medium">
             {Object.entries(testCase.input).map(([key, value], index) => (
               <span key={index}>
                 {key} = {Array.isArray(value) ? `[${value.join(", ")}]` : value}
@@ -98,17 +97,15 @@ const TestCase = ({ testCase, idx }: TestCaseProps) => {
           </h4>
         </div>
         {/* output */}
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <h4 className="font-semibold">Output:</h4>
-          <h4 className="text-primary/60 font-semibold text-sm">
-            {testCase.output}
-          </h4>
+          <h4 className="text-primary/60 font-medium">{testCase.output}</h4>
         </div>
         {/* explantion */}
         {testCase.explanation && (
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2">
             <h4 className="font-semibold">Explanation:</h4>
-            <h4 className="text-primary/60 font-semibold text-sm">
+            <h4 className="text-primary/60 font-medium">
               {testCase.explanation}
             </h4>
           </div>

@@ -24,7 +24,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       const isTokenExpired = decodedToken.exp! * 1000 < Date.now();
 
       if (isTokenExpired) {
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("auth-token");
         setIsAuth(false);
       } else {
         setIsAuth(true);

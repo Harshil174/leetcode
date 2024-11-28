@@ -8,6 +8,18 @@ const handleError = (error: any, defaultMessage: string): never => {
   }
 };
 
+export const getAllProblems = async () => {
+  try {
+    const { data } = await api.get("/problem");
+    if (!data.success) {
+      throw new Error(data.message || "Failed to fetch problems");
+    }
+    return data;
+  } catch (err) {
+    handleError(err, "An unexpected error occurred, Please try again later");
+  }
+};
+
 export const getProblemById = async (problemId: string) => {
   try {
     const { data } = await api.get(`/problem/${problemId}`);
