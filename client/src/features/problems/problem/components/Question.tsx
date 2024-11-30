@@ -88,7 +88,7 @@ const TestCase = ({ testCase, idx }: TestCaseProps) => {
         <div className="flex gap-2">
           <h4 className="font-semibold">Input:</h4>
           <h4 className="text-primary/60 font-medium">
-            {Object.entries(testCase.input).map(([key, value], index) => (
+            {Object.entries(testCase.input).map(([key, value]: any, index) => (
               <span key={index}>
                 {key} = {Array.isArray(value) ? `[${value.join(", ")}]` : value}
                 {index < Object.entries(testCase.input).length - 1 && ", "}

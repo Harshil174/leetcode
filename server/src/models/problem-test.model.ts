@@ -3,8 +3,8 @@ import { IProblemTest } from "../types";
 
 const problemTestSchema = new mongoose.Schema(
   {
-    input: { type: Object, required: true },
-    output: { type: String, required: true, trim: true },
+    input: { type: mongoose.Schema.Types.Mixed, required: true },
+    output: { type: mongoose.Schema.Types.Mixed, required: true, trim: true },
     explanation: { type: String, default: "", trim: true },
     visible: { type: Boolean, default: false },
     problemId: {

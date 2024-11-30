@@ -80,80 +80,82 @@ const CodeEditor = ({ boilerPlateCode }: CodeEditorProps) => {
 
   return (
     <div className="w-full h-full p-1 overflow-hidden">
-      <div className="w-full h-full border border-primary/40 rounded-lg bg-primary/10 flex flex-col gap-2 p-2 overflow-hidden relative">
-        <div className="px-3 py-2 flex items-center gap-5 justify-between bg-primary/5 border border-primary/40 rounded-lg overflow-x-scroll overflow-y-hidden">
-          <SelectLanguage language={language} setLanguage={setLanguage} />
-          <div
-            id="menu-bar"
-            className="flex items-center justify-between gap-2"
-          >
-            {/* format */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  {isFormatting ? (
-                    <Loader2 className="size-5 animate-spin text-muted-foreground" />
-                  ) : isFormatted ? (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        duration: 0.5,
-                        type: "spring",
-                        stiffness: 200,
-                      }}
-                      className="text-green-600"
-                    >
-                      <Check />
-                    </motion.div>
-                  ) : (
-                    <AlignLeft
-                      onClick={formatCode}
-                      className="size-5 cursor-pointer text-primary/60 hover:text-primary"
-                    />
-                  )}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Format code</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+      <div className="w-full h-full p-2 border border-primary/40 rounded-lg bg-primary/10 flex flex-col gap-2 overflow-x-hidden relative">
+        <div className="w-full h-fit">
+          <div className="px-3 py-2 flex items-center gap-5 justify-between bg-primary/5 border border-primary/40 rounded-lg">
+            <SelectLanguage language={language} setLanguage={setLanguage} />
+            <div
+              id="menu-bar"
+              className="flex items-center justify-between gap-2"
+            >
+              {/* format */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    {isFormatting ? (
+                      <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                    ) : isFormatted ? (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{
+                          duration: 0.5,
+                          type: "spring",
+                          stiffness: 200,
+                        }}
+                        className="text-green-600"
+                      >
+                        <Check />
+                      </motion.div>
+                    ) : (
+                      <AlignLeft
+                        onClick={formatCode}
+                        className="size-5 cursor-pointer text-primary/60 hover:text-primary"
+                      />
+                    )}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Format code</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
-            {/* reset */}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <span>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <RotateCcw className="size-5 text-primary/60 hover:text-primary hover:-rotate-[360deg] transition duration-500 cursor-pointer" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Reset to default code</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </span>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="w-[450px]">
-                <div className="flex gap-5">
-                  <CircleAlert className="size-10 rotate-180" />
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Your current code will be discarded and reset to default
-                      code!
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                </div>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleResetDefaultCode}>
-                    Confirm
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              {/* reset */}
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <RotateCcw className="size-5 text-primary/60 hover:text-primary hover:-rotate-[360deg] transition duration-500 cursor-pointer" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Reset to default code</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </span>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="w-[450px]">
+                  <div className="flex gap-5">
+                    <CircleAlert className="size-10 rotate-180" />
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Your current code will be discarded and reset to default
+                        code!
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleResetDefaultCode}>
+                      Confirm
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </div>
         </div>
 

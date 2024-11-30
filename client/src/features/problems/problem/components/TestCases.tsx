@@ -14,7 +14,7 @@ const TestCases = ({ testCases }: TesetCasesProps) => {
   );
   return (
     <div className="w-full h-full p-1 overflow-hidden">
-      <div className="w-full h-full px-5 py-3 border border-primary/40 rounded-lg bg-primary/10 flex flex-col gap-2 p-2 overflow-x-hidden relative">
+      <div className="w-full h-full px-5 py-3 border border-primary/40 rounded-lg bg-primary/10 flex flex-col gap-2 overflow-x-hidden relative">
         <div className="w-full h-fit bg-transparent">
           <div className="py-2 flex gap-3 items-center overflow-x-scroll">
             {filteredTestCases.map((testCase, idx) => (
@@ -36,7 +36,7 @@ const TestCases = ({ testCases }: TesetCasesProps) => {
           {selectedTestCase !== null ? (
             <div className="space-y-3">
               {Object.entries(selectedTestCase.input).map(
-                ([key, value], idx) => (
+                ([key, value]: any, idx) => (
                   <div key={idx} className="w-full h-full overflow-hidden">
                     <div className="space-y-0.5">
                       <p className="text-sm font-medium text-primary/50">

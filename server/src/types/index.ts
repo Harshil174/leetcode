@@ -33,8 +33,8 @@ export interface IProblem extends mongoose.Document {
 }
 
 export interface IProblemTest extends mongoose.Document {
-  input: Object;
-  output: string;
+  input: any;
+  output: any;
   explanation: string;
   visible: boolean;
   problemId: mongoose.Types.ObjectId;

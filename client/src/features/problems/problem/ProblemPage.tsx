@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { getProblemById } from "@/services/api/problem.service";
 
@@ -23,6 +23,7 @@ import TestCases from "./components/TestCases";
 
 const ProblemPage = () => {
   const { problemId } = useParams();
+  const navigate = useNavigate();
 
   const { data, isLoading, isFetching, isRefetching, isError, error, refetch } =
     useQuery({
@@ -42,10 +43,22 @@ const ProblemPage = () => {
     return <LoadingSpinner />;
   }
 
+  if (!problemId) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p>Problem ID is missing.</p>
+        <Button onClick={() => navigate(-1)} className="mt-2">
+          Go Back
+        </Button>
+      </div>
+    );
+  }
   if (isError) {
+    const errorMessage =
+      (error as Error).message || "Failed to fetch the problem";
     return (
       <div className="flex flex-col items-center justify-center h-screen text-destructive">
-        <p>{(error as Error).message || "Failed to fetch the problem"}</p>
+        <p>{errorMessage}</p>
         <Button
           onClick={() => refetch()}
           size={"sm"}
@@ -68,7 +81,7 @@ const ProblemPage = () => {
     >
       <ResizablePanel
         defaultSize={50}
-        className="w-full h-full overflow-hidden"
+        className="w-full h-full overflow-hidden relative"
       >
         <Question
           title={problem.title}
@@ -83,19 +96,19 @@ const ProblemPage = () => {
 
       <ResizablePanel
         defaultSize={50}
-        className=" w-full h-full overflow-hidden"
+        className=" w-full h-full overflow-hidden relative"
       >
         <ResizablePanelGroup
           direction="vertical"
           className="w-full h-full m-auto overflow-hidden relative"
         >
-          <ResizablePanel defaultSize={70} className="w-full h-full">
+          <ResizablePanel defaultSize={70} className="w-full h-full relative">
             <CodeEditor boilerPlateCode={problem.boilerPlateCode} />
           </ResizablePanel>
 
           <ResizableHandle withHandle className="w-full h-2" />
 
-          <ResizablePanel defaultSize={30} className="w-full h-full">
+          <ResizablePanel defaultSize={30} className="w-full h-full relative">
             <TestCases testCases={problem.testCases} />
           </ResizablePanel>
         </ResizablePanelGroup>

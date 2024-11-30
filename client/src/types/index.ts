@@ -25,8 +25,8 @@ export type Problem = {
 
 export type ProblemTest = {
   _id: string;
-  input: object;
-  output: string;
+  input: any;
+  output: any;
   explanation: string;
   visible: boolean;
   problemId: string;
